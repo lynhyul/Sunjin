@@ -99,4 +99,27 @@ docker pull 명령어를 통해서 가져 올 수 있습니다.
 ~~~
 docker pull nvidia/cuda:11.2.0-cudnn8-devel-centos7
 ~~~
+~~~
+docker pull nvidia/cuda:11.2.0-cudnn8-devel-centos7
+~~~
+
+~~~
+lynhyul@DESKTOP-TEUDVF9:~$ docker run \
+> -d \
+> --name torch \
+> --gpus all \
+>  --ipc=host \
+>  -v $(pwd):/workspace \
+> pytorch/pytorch:1.10.0-cuda11.3-cudnn8-devel \
+> python -m http.server
+~~~
+
+그러나 아래와 같이 다시 한 번 에러가 발생 했습니다.
+
+~~~ 
+bde6112df84f9434b3067f7659b18ef5df2f3282865a91ec5a86e4367edf2722
+docker: Error response from daemon: failed to create shim task: OCI runtime create failed: runc create failed: unable to start container process: error during container init: error running hook #0: error running hook: exit status 1, stdout: , stderr: Auto-detected mode as 'legacy'
+nvidia-container-cli: initialization error: WSL environment detected but no adapters were found: unknown.
+~~~
+
 
