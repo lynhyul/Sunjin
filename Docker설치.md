@@ -4,7 +4,7 @@
 
    
 
-2.  도커의 사용 이유는 다음과 같습니다.
+2. 도커의 사용 이유는 다음과 같습니다.
 
    - **구성 단순화** Docker는 하나의 Configuration으로 모든 플랫폼에서 실행할 수 있습니다. Configuration 파일을 코드에 넣고 환경 변수를 전달하여 다른 환경에 맞출 수 있습니다. 따라서 하나의 Docker 이미지를 다른 환경에서 사용할 수 있습니다.
 
@@ -16,8 +16,8 @@
 
 
 3.  Docker는 Client (docker)와 서버 (dockerd)로 구성되어 있습니다. Docker Images는 read only의 docker container를 생성하기 위한 template이고, Container는 images가 실제 메모리에 로딩된 instance입니다. 하나의 images로 유사한 container를 만들 수 있습니다. Registry는 Docker hub이며 images의 저장소입니다. 
-   - Images: libs와 package의 template, read only
-   - Container: Images가 설치되어 메모리에 로딩된 instance ![img](https://blog.kakaocdn.net/dn/bviqtp/btqLkg4LRhJ/qo74pSME2KtAMavs9LXS20/img.png)
+    - Images: libs와 package의 template, read only
+    - Container: Images가 설치되어 메모리에 로딩된 instance ![img](https://blog.kakaocdn.net/dn/bviqtp/btqLkg4LRhJ/qo74pSME2KtAMavs9LXS20/img.png)
 
 
 
@@ -88,9 +88,82 @@ CONTAINER ID   IMAGE     COMMAND   CREATED   STATUS    PORTS     NAMES
 
 
 
+### 2.Container 생성 (`docker-compose.yml` 작성)
+
+빌드된 이미지를 이용해서 `container`를 생성합니다. `cli`를 통해 `container`에 필요한 arguments를 직접 입력해주는 `docker run`과, 미리 `docker-compose.yml` 파일에 arguments를 모두 입력해놓고 실행 시 불러오는 `docker compose`가 있습니다.
+
+#### - docker run
+
+docker에서 가장 많이 사용하게 되는 `run`에는 다양한 option들이 있습니다. 그 중, 몇가지만 간략하게 확인하자.
+
+- `-v`, `--volume` : [host-src]:[container-dest] 저장 공간 bind
+- `-d`, `--detach` : 백그라운드 실행
+- `-p`, `--port` : [host-port]:[container-port] 포트 포워딩
+- `--gpus` : 사용할 gpu 입력 (ex1. ‘“device=0,2”’) (ex2. all)
+- `--rm` : container 상태가 exit이 되면 자동으로 삭제
 
 
-#### 2. YOLO v7 Dokcer로 실행해보기
+
+#### 3. Pytorch 실행 해보기
+
+~~~
+docker pull pytorch/pytorch			## Docker 이미지 생성
+sudo docker run -it pytorch/pytorch		## Docker 컨테이너 생성
+~~~
+
+위와 같이 이미지를 생성 한 후에, 컨테이너를 생성하면 다음과 같이 workspace가 활성화 됩니다.
+
+~~~
+root@38e87d991f94:/workspace#
+~~~
+
+이 상태에서 Vscode와 연동 하는 방법은 아래와 같습니다.
+
+(참조 : https://shuka.tistory.com/18)
+
+1) Extensions에서 Remote Development 설치
+
+VSCode에서 docker container을 연동해서 사용하기 위해 우선 왼쪽 메뉴의 Extension에서 Remote Development를 설치한다.
+
+![img](https://blog.kakaocdn.net/dn/6tcNE/btrgnroFfkk/8HF20FcIvTw6wtvkuT2Eo1/img.png)
+
+
+
+2)Remote-Containers: Attach to Running Container...
+
+Ctrl + Shift + p를 누르면 여러 명령어들을 볼 수 있는데 remote-Containers:Attach to Running Container를 선택해 준다.
+
+![img](https://blog.kakaocdn.net/dn/bNZwm9/btrgjFVhiwD/5jXd53vkFSWow6DFlcAOYk/img.png)
+
+
+
+선택을 했을 때 만약 docker container가 없거나 실행되어 있지 않은 경우 다음과 같은 메세지 창이 뜬다.
+
+
+
+![img](https://blog.kakaocdn.net/dn/dGGn77/btrgnrhUNbj/DYhqp02ODAKmrjTGim0tdK/img.png)
+
+
+
+ 
+
+이럴 경우 docker container를 만들어 주거나 container를 다음과 같이 start를 해주고 다시 하면 된다.
+
+```
+docker start <container 이름>
+```
+
+ 
+
+container가 있다면 다음과 같이 해당 container가 나타나고 여러 container라면 원하는 container를 클릭하면 된다.
+
+![img](https://blog.kakaocdn.net/dn/n67XM/btrgofO6UuC/MB4S5zY5nPocD8Y0YTWTW0/img.png)
+
+원하는 container를 클릭하면 현재 open되어 있는 vscode창 말고 새로 container가 연동되어 있는 vscode 창이 뜬다.
+
+
+
+#### 4. YOLO v7 Dokcer로 실행해보기
 
 먼저, 다음과 같은 명령어로 cuda 11.2 와 cudnn8을 설치 해줍니다.
 
@@ -99,9 +172,17 @@ docker pull 명령어를 통해서 가져 올 수 있습니다.
 ~~~
 docker pull nvidia/cuda:11.2.0-cudnn8-devel-centos7
 ~~~
+
+docker images 명령어를 통해서 다음과 같이 성공적으로 docker image가 생성 된 것을 확인 할 수 있었습니다.
+
+~~~ 
+lynhyul@DESKTOP-TEUDVF9:~$ docker images
+REPOSITORY        TAG                            IMAGE ID       CREATED         SIZE
+pytorch/pytorch   1.10.0-cuda11.3-cudnn8-devel   46961cbf2ac7   13 months ago   14.4GB
+hello-world       latest                         feb5d9fea6a5   14 months ago   13.3kB
 ~~~
-docker pull nvidia/cuda:11.2.0-cudnn8-devel-centos7
-~~~
+
+그런 다음 받은 이미지를 통해서 실행하고자 다음과 같이 명령어를 넣어서 실행 해봤습니다.
 
 ~~~
 lynhyul@DESKTOP-TEUDVF9:~$ docker run \
@@ -122,4 +203,4 @@ docker: Error response from daemon: failed to create shim task: OCI runtime crea
 nvidia-container-cli: initialization error: WSL environment detected but no adapters were found: unknown.
 ~~~
 
-
+GPU카드가 달려 있지 않은 상태로 Nvidia와 연동하려 하였기 때문에 생긴 오류로 예측하고 있습니다. 이는 나중에 사내 노트북을 지급 받으면 다시 진행 하겠습니다.
