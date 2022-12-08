@@ -211,7 +211,7 @@ GPU카드가 달려 있지 않은 상태로 Nvidia와 연동하려 하였기 때
 
 ---
 
-![image-20221208153636537](C:\Users\lynhy\AppData\Roaming\Typora\typora-user-images\image-20221208153636537.png)
+![image](https://user-images.githubusercontent.com/76422150/206389046-b83398ce-7a94-47e3-8626-2b7202aef0d6.png)
 
 WSL2의 경우, 폴더에 다음과 같이 접속 할 수 있다.
 
@@ -299,7 +299,7 @@ lynhyul@DESKTOP-24K6OHF:~$
 appuser@bd0050a9078f:~/detectron2_repo/demo$ export DISPLAY=172.30.192.1:0
 ~~~
 
-![image-20221208164315983](C:\Users\lynhy\AppData\Roaming\Typora\typora-user-images\image-20221208164315983.png)
+![image](https://user-images.githubusercontent.com/76422150/206389094-804d34d0-d96c-4d12-8dbf-ce2ca3f142ff.png)
 
 
 
