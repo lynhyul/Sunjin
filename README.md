@@ -7,7 +7,7 @@
 
 
 
-OCR & Rule-Base
+OCR & Rule-Base (불량 검출)
 
 
 
